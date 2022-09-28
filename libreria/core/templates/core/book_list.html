@@ -1,0 +1,91 @@
+{% extends 'core/index.html' %}
+
+{% block content %}
+
+<h1>This is the list book from library view</h1>
+
+<table class="table">
+    {% if context %}
+    <thead>
+        <tr>
+            <th>Isbn</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>autor</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in context %}
+
+        <tr>
+            <td>{{ b.isbn }}</td>
+            <td>{{ b.title }}</td>
+            <td>{{ b.year }}</td>
+            <td> {{b.autor }}</td>
+            <td>
+                <form action="{% url 'book_deleted' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" value="{{ b.isbn }}" name="isbn" hidden>
+                    <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+
+        {% endfor%}
+
+        {% else %}
+
+        <h3>There are no books in the library</h3>
+
+        {% endif%}
+    </tbody>
+</table>
+
+<hr>
+tabla fitrada por año mayor a {{filter_year}}
+
+<table class="table">
+
+
+    {% if context %}
+    <thead>
+        <tr>
+            <th>Isbn</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Autor</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in context %}
+
+            {% if b.year|add:"0" > filter_year %}
+
+                <tr>
+                    <td>{{ b.isbn }}</td>
+                    <td>{{ b.title }}</td>
+                    <td>{{ b.year }}</td>
+                    <td>{{ b.autor }}</td>
+                    <td>
+                        <form action="{% url 'book_deleted' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" value="{{ b.isbn }}" name="isbn" hidden>
+                            <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            {% endif %}
+
+        {% endfor%}
+
+        {% else %}
+
+        <h3>There are no books in the library</h3>
+
+        {% endif%}
+    </tbody>
+</table>
+
+{% endblock %}
